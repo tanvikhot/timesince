@@ -12,14 +12,26 @@ var list1 = []; var blogPosts = [];
 
 function addTimer(){
   // getting the elements from the text areas
-  var data = {};
+
+  var data; // = {};
+  if($("#blogIndex").val() ==""){
+    data = {};
+  }else{
+    data = blogPosts[$("#blogIndex").val()];
+  }
   data.title = $("#timerTitle").val();
   data.description = $("#timerDescription").val();
   data.startTime = Date.parse($("#timerDateInput").val());
   data.likes = 0;
+  if($("#blogIndex").val() ==""){
   blogPosts.push(data);
-  console.log(data);
+
+
+  //console.log(data);
   addToPage(data, blogPosts.length -1);
+}else{
+  location.reload();
+}
   saveData();
   $('#addform')[0].reset();
   $('#myModal').modal('hide');
@@ -53,6 +65,8 @@ function addToPage(data, index) {
 //   newDiv.find(".blogimg").attr("src", data.pic);
   newDiv.find(".deletebtn").attr("onclick", "deletePost(" + index + ");");
   newDiv.find(".likebtn").attr("onclick", "likePost(" + index + ");");
+  var editBtn = newDiv.find(".editbtn");
+  newDiv.find(".editbtn").val(index);
   newDiv.attr("id", "blogPost" + index);
   newDiv.show();
 }
@@ -63,6 +77,13 @@ function likePost(index){
   numLikes = blogPosts[index].likes = blogPosts[index].likes + 1;
   document.getElementById("likeBtn" + index).innerHTML = numLikes;
    saveData();
+}
+
+function editPost(index){
+  var data = blogPosts[index];
+  $("#timerTitle").val(data.title);
+  $("#timerDescription").val(data.description);
+  $("#blogIndex").val(index);
 }
 function addMarker(Longitude, Latitude) {
   var marker = new mapboxgl.Marker({
@@ -91,19 +112,17 @@ function deletePost(index){
   saveData();
 }
 function makeTimer() {
-	var blogPostsStr = localStorage.getItem("blogPosts");
-	if (blogPostsStr) {
-		blogPosts = JSON.parse(blogPostsStr);
+
 		for (var i=blogPosts.length -1; i >= 0; i--) {
 			var blogPost = blogPosts[i];
 			if (!isNaN(blogPost.startTime)) {
 				var divname = 'blogPost' + i;
 				var startTime = (blogPost.startTime / 1000);
-	
+        console.log("start :" + startTime);
 				var now = (Date.parse(new Date()) / 1000);
-	
+        console.log("now :" + now);
 				var timeLeft = now - startTime;
-				console.log("timeleft: " + timeLeft);
+				//console.log("timeleft: " + timeLeft);
 				var eventTitle;
 				if (timeLeft < 0) {
 					timeLeft = -1 * timeLeft;
@@ -111,25 +130,26 @@ function makeTimer() {
 				} else {
 					eventTitle = "Time Since";
 				}
-	
-				var days = Math.floor(timeLeft / 86400); 
+        console.log(timeLeft);
+				var days = Math.floor(timeLeft / 86400);
+
 				var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
 				var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600 )) / 60);
 				var seconds = Math.floor((timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60)));
-	
+
 				if (hours < "10") { hours = "0" + hours; }
 				if (minutes < "10") { minutes = "0" + minutes; }
 				if (seconds < "10") { seconds = "0" + seconds; }
 
-	
+
 				var blogDiv = $('#blogPost' + i);
-				console.log("eventTitle: " + eventTitle);
+				//console.log("eventTitle: " + eventTitle);
 				blogDiv.find(".timedirection").html(eventTitle + "<span>---------------------------------------</span>");
 				blogDiv.find(".days").html(days + "<span>Days</span>");
 				blogDiv.find(".hours").html(hours + "<span>Hours</span>");
 				blogDiv.find(".minutes").html(minutes + "<span>Minutes</span>");
 				blogDiv.find(".seconds").html(seconds + "<span>Seconds</span>");
 			}
-		}
+
 	}
 }

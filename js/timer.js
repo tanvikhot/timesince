@@ -81,18 +81,29 @@ function likePost(index){
    saveData();
 }
 
-function setPreviewTime(index) {
+function getDefaultFormatForPreviewTime(index) {
+	var blogPost = blogPosts[index];
+	var startTime = (blogPost.startTime / 1000);
+	var now = (Date.parse(new Date()) / 1000);
+	var format;
+	if (now - startTime < 0) {
+		format = "%days% days %hours% hours %minutes% minutes %seconds% seconds<br/>till %title%";
+	} else {
+		format = "%days% days %hours% hours %minutes% minutes %seconds% seconds<br/>since %title%";
+	}
+	return format;
+}
+
+function getPreviewTimeWithFormat(index, format) {
 	var blogPost = blogPosts[index];
 	var startTime = (blogPost.startTime / 1000);
 	var timesince = getDisplayTime(startTime);
-	var message = timesince[0] + " days " + timesince[1] + " hours " + timesince[2] + " minutes " + timesince[3] + " seconds";
-	var now = (Date.parse(new Date()) / 1000);
-	if (now - startTime < 0) {
-		message += "<br/>till " + blogPost.title;
-	} else {
-		message += "<br/>since " + blogPost.title;
-	}
-	$('#previewtimer').html(message);
+	var message = format.replace('%days%', timesince[0]);
+	message = message.replace('%hours%', timesince[1]);
+	message = message.replace('%minutes%', timesince[2]);
+	message = message.replace('%seconds%', timesince[3]);
+	message = message.replace('%title%', blogPost.title);
+	return message;
 }
 function editPost(index){
   var data = blogPosts[index];

@@ -1,7 +1,3 @@
   cp ../../timesince.pixelround.com/js/timer.js js/
   cp ../../timesince.pixelround.com/index.html .
   cp ../../timesince.pixelround.com/css/timer.css css
-  cp ../../timesince.pixelround.com/js/FileSaver.js js/
-  cp ../../timesince.pixelround.com/js/html2canvas.* js/
-  cp ../../timesince.pixelround.com/js/simple-slider.* js/
-  cp ../../timesince.pixelround.com/css/simple-slider.css css/

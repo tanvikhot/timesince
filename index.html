@@ -29,6 +29,11 @@
     <script src="js/simple-slider.js"></script>
     <script>
       $(function() {
+	var currentIndex = -1;
+	$('#memeTextFmt').on('input', function(e) {
+		var message = getPreviewTimeWithFormat(currentIndex, e.currentTarget.value);
+		$('#previewtimer').html(message);
+	});
 	$('#memeTextColor').simpleSlider();
 	$('#memeTextColor').bind("slider:changed", function (event, data) {
 		var colorE = Number(Math.floor(data.value * 255)).toString(16);
@@ -43,7 +48,7 @@
 		html2canvas($("#previewcontainer")[0]).then(function(canvas) {
 			theCanvas = canvas; 
 			canvas.toBlob(function(blob) {
-				saveAs(blob, "Dashboard.png"); 
+				saveAs(blob, "timesince-meme.png"); 
 			});
 		});
 	});
@@ -61,7 +66,11 @@
 	});
         $('#previewmodal').on('show.bs.modal', function (event) {
 		var btnClicked = event.relatedTarget;
-		setPreviewTime(btnClicked.value);
+		var format = getDefaultFormatForPreviewTime(btnClicked.value);
+		var message = getPreviewTimeWithFormat(btnClicked.value, format);
+		$('#previewtimer').html(message);
+		$('#memeTextFmt').val(format);
+		currentIndex = btnClicked.value;
 	});
         $('#addmodal').on('show.bs.modal', function (event) {
 		var options = { day: 'numeric', month: 'long', year: 'numeric', hour:'numeric',  minute:'numeric', second: 'numeric' };

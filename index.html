@@ -19,28 +19,65 @@
 
     <link rel="stylesheet" href="css/bootstrap-datepicker.css">
       <link rel="stylesheet" href="css/timer.css" type="text/css">
+      <link rel="stylesheet" href="css/simple-slider.css" type="text/css">
 
     <!--linking the js file  -->
     <script src="js/timer.js" type="text/javascript"></script>
+    <script src="js/html2canvas.js" type="text/javascript"></script>
+    <script src="js/FileSaver.js" type="text/javascript"></script>
     <script src="js/bootstrap-datepicker.js"></script>
+    <script src="js/simple-slider.js"></script>
     <script>
       $(function() {
-        $('#myModal').on('show.bs.modal', function (event) {
+	$('#memeTextColor').simpleSlider();
+	$('#memeTextColor').bind("slider:changed", function (event, data) {
+		var colorE = Number(Math.floor(data.value * 255)).toString(16);
+		var color = "#" + colorE + colorE + colorE;
+		$('#previewtimer').css('color', color);
+	});
+	$('#memeTextBkg').simpleSlider();
+	$('#memeTextBkg').bind("slider:changed", function (event, data) {
+		$('#previewtimer').css('background-color', 'rgba(255, 255, 255, ' + data.value + ')');
+	});
+	$('#downloadbtn').click(function() {
+		html2canvas($("#previewcontainer")[0]).then(function(canvas) {
+			theCanvas = canvas; 
+			canvas.toBlob(function(blob) {
+				saveAs(blob, "Dashboard.png"); 
+			});
+		});
+	});
+	$('#uploadbtn').click(function() {
+		$('input[type=file]').trigger('click');
+	});
+	$('input[type=file]').change(function () {
+		var reader = new FileReader();
+
+		reader.onload = function (e) {
+			$('#previewimagetag').attr('src', e.target.result).width(400).height(600);
+		};
+
+		reader.readAsDataURL(this.files[0]);
+	});
+        $('#previewmodal').on('show.bs.modal', function (event) {
+		var btnClicked = event.relatedTarget;
+		setPreviewTime(btnClicked.value);
+	});
+        $('#addmodal').on('show.bs.modal', function (event) {
 		var options = { day: 'numeric', month: 'long', year: 'numeric', hour:'numeric',  minute:'numeric', second: 'numeric' };
 		var today  = new Date();
 		$('#timerDateInput').val(today.toLocaleDateString(navigator.language, options));
-    var btnClicked = event.relatedTarget;
-    if (btnClicked.value) {
-      $("#saveButton").text("Save Timer");
-      editPost(btnClicked.value);
-    }else{
-      $("#saveButton").text("Create Timer");
-    }
-
+		var btnClicked = event.relatedTarget;
+		if (btnClicked.value) {
+		  $("#saveButton").text("Save Timer");
+		  editPost(btnClicked.value);
+		}else{
+		  $("#saveButton").text("Create Timer");
+		}
 	});
-  $('#myModal').on('hide.bs.modal', function (event) {
-    $("#addform")[0].reset();
-  });
+        $('#addmodal').on('hide.bs.modal', function (event) {
+          $("#addform")[0].reset();
+        });
         $('.input-group.date').datepicker({
             clearBtn: true,
             daysOfWeekDisabled: "0",
@@ -58,7 +95,7 @@
             <input id="mySearch" class="form-control mr-sm-2" onkeyup="getList1()" type="search" placeholder="Search for tags..." aria-label="Search for tags...">
           </div> -->
           <div id="addentrybutton">
-            <button type="button" class="btn btn-info"  data-toggle="modal" data-target="#myModal">Add Entry</button>&nbsp;&nbsp;
+            <button type="button" class="btn btn-info"  data-toggle="modal" data-target="#addmodal">Add Entry</button>&nbsp;&nbsp;
           </div>
         </div>
         <div id = "div0" style="margin-top: 50px;"> </div>
@@ -97,7 +134,8 @@
             </div>
             <div class="col-md-2 col-sm-6" style="float:right">
                 <!-- <button type="button" class="btn btn-primary likebtn"><i class="fa fa-thumbs-up"></i></button> -->
-              <button type="button" class="btn btn-info editbtn" data-toggle="modal" data-target="#myModal" ><i class="fa fa-edit"></i></button>
+              <button type="button" class="btn btn-info editbtn" data-toggle="modal" data-target="#addmodal" ><i class="fa fa-edit"></i></button>
+              <button type="button" class="btn btn-info previewbtn" data-toggle="modal" data-target="#previewmodal" ><i class="fa fa-eye"></i></button>
               <button class="btn btn-danger deletebtn" class="deletebtn"><i class="fa fa-trash"></i></button>
               <!-- <div class="inline bloglikes"></div> -->
             </div>
@@ -132,8 +170,8 @@
 </footer>
 <!-- Footer -->
 
-  <!-- Modal -->
-  <div id="myModal" class="modal fade" role="dialog">
+  <!-- Add Modal -->
+  <div id="addmodal" class="modal fade" role="dialog">
     <div class="modal-dialog">
 
       <!-- Modal content-->
@@ -192,10 +230,64 @@
           <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
         </div>
       </div>
-
+      </div>
     </div>
   </div>
 
+  <!-- Preview Modal -->
+  <div id="previewmodal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
 
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Create a Meme</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+	<div id="previewcontainer">
+	<div id="previewimage">
+	<img id="previewimagetag" src="https://dummyimage.com/400x600/ccc/000.png&text=Upload+your+image+to+customize+your+meme"/>
+	</div>
+	</form>
+	<div id="previewtimer">10:20:30</div>
+	</div>
+        </div>
+	<div class="row" style="margin-left:5px; margin-right:5px">
+		<div class="col-md-4">
+			Text Alpha
+		</div>
+		<div class="col-md-8">
+			<input id="memeTextColor" type="text"/>
+		</div>
+	</div>
+	<div class="row" style="margin-left:5px; margin-right:5px">
+		<div class="col-md-4">
+			Text Opacity
+		</div>
+		<div class="col-md-8">
+			<input id="memeTextBkg" type="text"/>
+		</div>
+	</div>
+	<div class="row" style="margin-left:5px; margin-right:5px">
+		<div class="col-md-4">
+			Text Format
+		</div>
+		<div class="col-md-8">
+			<input id="memeTextFmt" type="text" value="%time% since %title%"/>
+		</div>
+	</div>
+        <div class="modal-footer">
+	  <div class="fallback" style="display: none;">
+	  <input name="file" type="file" id="file"/>
+	  </div>
+          <button type="button" class="btn btn-info" id="uploadbtn">Upload Image</button>
+          <button type="button" class="btn btn-success" id="downloadbtn">Download Meme</button>
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
 </body>
 </html>

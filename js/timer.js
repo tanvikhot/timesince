@@ -110,6 +110,10 @@ function editPost(index){
   $("#timerTitle").val(data.title);
   $("#timerDescription").val(data.description);
   $("#blogIndex").val(index);
+
+  var options = { day: 'numeric', month: 'long', year: 'numeric', hour:'numeric',  minute:'numeric', second: 'numeric' };
+  var startTime = new Date(data.startTime);
+  $('#timerDateInput').val(startTime.toLocaleDateString(navigator.language, options));
 }
 function addMarker(Longitude, Latitude) {
   var marker = new mapboxgl.Marker({
@@ -172,39 +176,12 @@ function makeTimer() {
 				eventTitle = "Time Since";
 			}
 
-			/*
-        // console.log("start :" + startTime);
-				var now = (Date.parse(new Date()) / 1000);
-        // console.log("now :" + now);
-				var timeLeft = now - startTime;
-				//console.log("timeleft: " + timeLeft);
-				var eventTitle;
-				if (timeLeft < 0) {
-					timeLeft = -1 * timeLeft;
-					eventTitle = "Time Left";
-				} else {
-					eventTitle = "Time Since";
-				}
-        // console.log(timeLeft);
-				var days = Math.floor(timeLeft / 86400);
-
-				var hours = Math.floor((timeLeft - (days * 86400)) / 3600);
-				var minutes = Math.floor((timeLeft - (days * 86400) - (hours * 3600 )) / 60);
-				var seconds = Math.floor((timeLeft - (days * 86400) - (hours * 3600) - (minutes * 60)));
-
-				if (hours < "10") { hours = "0" + hours; }
-				if (minutes < "10") { minutes = "0" + minutes; }
-				if (seconds < "10") { seconds = "0" + seconds; }
-
-				*/
-
-				var blogDiv = $('#blogPost' + i);
-				blogDiv.find(".timedirection").html(eventTitle + "<span>---------------------------------------</span>");
-				blogDiv.find(".days").html(timesince[0] + "<span>Days</span>");
-				blogDiv.find(".hours").html(timesince[1] + "<span>Hours</span>");
-				blogDiv.find(".minutes").html(timesince[2] + "<span>Minutes</span>");
-				blogDiv.find(".seconds").html(timesince[3] + "<span>Seconds</span>");
-			}
-
+			var blogDiv = $('#blogPost' + i);
+			blogDiv.find(".timedirection").html(eventTitle + "<span>---------------------------------------</span>");
+			blogDiv.find(".days").html(timesince[0] + "<span>Days</span>");
+			blogDiv.find(".hours").html(timesince[1] + "<span>Hours</span>");
+			blogDiv.find(".minutes").html(timesince[2] + "<span>Minutes</span>");
+			blogDiv.find(".seconds").html(timesince[3] + "<span>Seconds</span>");
+		}
 	}
 }

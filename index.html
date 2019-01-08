@@ -73,15 +73,15 @@
 		currentIndex = btnClicked.value;
 	});
         $('#addmodal').on('show.bs.modal', function (event) {
-		var options = { day: 'numeric', month: 'long', year: 'numeric', hour:'numeric',  minute:'numeric', second: 'numeric' };
-		var today  = new Date();
-		$('#timerDateInput').val(today.toLocaleDateString(navigator.language, options));
 		var btnClicked = event.relatedTarget;
 		if (btnClicked.value) {
 		  $("#saveButton").text("Save Timer");
 		  editPost(btnClicked.value);
 		}else{
 		  $("#saveButton").text("Create Timer");
+		  var options = { day: 'numeric', month: 'long', year: 'numeric', hour:'numeric',  minute:'numeric', second: 'numeric' };
+		  var today  = new Date();
+		  $('#timerDateInput').val(today.toLocaleDateString(navigator.language, options));
 		}
 	});
         $('#addmodal').on('hide.bs.modal', function (event) {

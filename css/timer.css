@@ -189,10 +189,6 @@ background-color: #c0c0c0;
   vertical-align: unset;
 }
 
-#previewcontainer {
-height: 600px;
-width: 100%;
-}
 #previewimage {
 z-index: 1;
 width: 400px;
@@ -249,6 +245,8 @@ background-color: #c0c0c0;
 #previewcontainer {
 height: 600px;
 width: 100%;
+object-fit: cover;
+overflow: hidden;
 }
 #previewimage {
 z-index: 1;

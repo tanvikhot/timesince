@@ -59,12 +59,12 @@
 		var reader = new FileReader();
 
 		reader.onload = function (e) {
-			$('#previewimagetag').attr('src', e.target.result).width(400).height(600);
+			$('#previewimagetag').attr('src', e.target.result).width(400).height(600).css('object-fit', 'cover');
 		};
 
 		reader.readAsDataURL(this.files[0]);
 	});
-        $('#previewmodal').on('show.bs.modal', function (event) {
+        $('#previewmodal').on('shown.bs.modal', function (event) {
 		var btnClicked = event.relatedTarget;
 		var format = getDefaultFormatForPreviewTime(btnClicked.value);
 		var message = getPreviewTimeWithFormat(btnClicked.value, format);
@@ -72,7 +72,7 @@
 		$('#memeTextFmt').val(format);
 		currentIndex = btnClicked.value;
 	});
-        $('#addmodal').on('show.bs.modal', function (event) {
+        $('#addmodal').on('shown.bs.modal', function (event) {
 		var btnClicked = event.relatedTarget;
 		if (btnClicked.value) {
 		  $("#saveButton").text("Save Timer");
@@ -84,7 +84,7 @@
 		  $('#timerDateInput').val(today.toLocaleDateString(navigator.language, options));
 		}
 	});
-        $('#addmodal').on('hide.bs.modal', function (event) {
+        $('#addmodal').on('hidden.bs.modal', function (event) {
           $("#addform")[0].reset();
         });
         $('.input-group.date').datepicker({

@@ -12,6 +12,38 @@ var list1 = []; var blogPosts = [];
 
 function addTimer(){
   // getting the elements from the text areas
+  var errors = false;
+  if ($('#timerTitle').val().trim() == '') {
+	  $('#timerTitle').css('background-color', 'pink');
+	  $('#timerTitle').tooltip({
+		title: 'Title cannot be empty',
+		placement: 'top'
+	  });
+	  $('#timerTitle').tooltip('show');
+	  $('#timerTitle').on('input', function() {
+	  	$('#timerTitle').css('background-color', 'white');
+	  	$('#timerTitle').tooltip('hide');
+	  	$('#timerTitle').tooltip('disable');
+	  });
+	  errors = true;
+  }
+  if ($('#timerDateInput').val().trim() == '') {
+	  $('#timerDateInput').css('background-color', 'pink');
+	  $('#timerDateInput').tooltip({
+		title: 'Start date & time cannot be empty',
+		placement: 'top'
+	  });
+	  $('#timerDateInput').tooltip('show');
+	  $('#timerDateInput').on('change', function() {
+	  	$('#timerDateInput').css('background-color', 'white');
+	  	$('#timerDateInput').tooltip('hide');
+	  	$('#timerDateInput').tooltip('disable');
+	  });
+	  errors = true;
+  }
+  if (errors) {
+	  return;
+  }
 
   var data; // = {};
   if($("#blogIndex").val() ==""){
@@ -34,7 +66,7 @@ function addTimer(){
 }
   saveData();
   $('#addform')[0].reset();
-  $('#myModal').modal('hide');
+  $('#addmodal').modal('hide');
 }
 function saveData(){
   localStorage.setItem("blogPosts", JSON.stringify(blogPosts));

@@ -1,3 +1,3 @@
 # timesince
 
-Code for timesince.pixelround.com
+Code for http://timesince.pixelround.com
